@@ -1,36 +1,47 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# If not root, use sudo
-if [[ $EUID -ne 0 ]]; then
-  SUDO='sudo'
-else
-  SUDO=''
-fi
+# ––– CONFIGURE THESE –––
+GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/master/config"
+# ––––––––––––––––––––––
 
-echo "Updating package database and installing required packages..."
+# privilege helper
+if ((EUID != 0)); then SUDO=sudo; else SUDO=; fi
+
+echo "Updating & installing packages…"
 $SUDO pacman -Syu --needed \
-  hyprland \
-  kitty \
-  dolphin \
-  wofi \
-  waybar \
-  hyprpaper \
-  grim \
-  slurp \
-  wl-clipboard \
-  brightnessctl \
-  playerctl \
-  swaylock \
-  xdg-desktop-portal-hyprland \
-  network-manager-applet
+  hyprland kitty dolphin wofi waybar hyprpaper \
+  grim slurp wl-clipboard brightnessctl playerctl \
+  swaylock xdg-desktop-portal-hyprland network-manager-applet
 
-echo "Creating Hyprland config directory..."
-CONFIG_DIR="$HOME/.config/hypr"
-mkdir -p "$CONFIG_DIR"
+install_dir() {
+  local target=$1
+  shift
+  mkdir -p "$HOME/.config/$target"
+}
 
-echo "Copying hyprland.conf to $CONFIG_DIR..."
-cp config/hypr/hyprland.conf "$CONFIG_DIR/hyprland.conf"
+fetch_or_copy() {
+  # args: subpath, target-filename
+  local sub="$1"
+  local file="$2"
+  local src="./config/$sub/$file"
+  local dst="$HOME/.config/$sub/$file"
 
-echo "Done! Your config is installed at $CONFIG_DIR/hyprland.conf"
+  if [[ -f "$src" ]]; then
+    cp "$src" "$dst"
+  else
+    curl -fsSL "$GITHUB_RAW/$sub/$file" -o "$dst"
+  fi
+  echo " → Installed $sub/$file"
+}
 
+echo "Setting up Hyprland config…"
+install_dir hypr
+fetch_or_copy hypr hyprland.conf
+
+echo "Setting up Waybar config…"
+install_dir waybar
+fetch_or_copy waybar config.jsonc
+fetch_or_copy waybar style.css
+
+echo "All done!"
