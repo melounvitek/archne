@@ -63,6 +63,27 @@ else
   echo "Skipping Mise."
 fi
 
+# ─ Optional: Docker + Compose ────────────────────
+read -rp "Install Docker and Docker Compose? (y/n) " yn
+if [[ $yn =~ ^[Yy] ]]; then
+  echo "Installing docker & docker-compose…"
+  $SUDO pacman -S --needed docker docker-compose
+
+  echo "Enabling Docker service…"
+  systemctl enable --now docker.service
+
+  # create docker group if missing
+  if ! getent group docker &>/dev/null; then
+    $SUDO groupadd docker
+  fi
+
+  # add current user to docker group
+  $SUDO usermod -aG docker "$USER"
+  echo "Added $USER to docker group. Log out/in for it to take effect."
+else
+  echo "Skipping Docker + Compose."
+fi
+
 # ─ Optional: Obsidian ──────────────────────────────────
 read -rp "Install Obsidian and enable auto-start? (y/n) " yn
 if [[ $yn =~ ^[Yy] ]]; then
