@@ -78,5 +78,19 @@ else
   echo "Skipping Syncthing."
 fi
 
+# ─ Optional: Neovim + LazyVim ──────────────────────────
+read -rp "Install Neovim with LazyVim? (y/n) " yn
+if [[ $yn =~ ^[Yy] ]]; then
+  echo "Installing neovim…"
+  $SUDO pacman -S --needed neovim git
+  echo "Setting up LazyVim…"
+  rm -rf "$HOME/.config/nvim"
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+  echo "Launching Neovim to finalize setup..."
+  nvim --headless +"Lazy! sync" +qa
+else
+  echo "Skipping Neovim + LazyVim."
+fi
+
 echo
 echo "All finished! 🎉"
