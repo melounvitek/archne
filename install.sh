@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ––– CONFIG –––
-GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/master/config"
+GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 # privilege helper
