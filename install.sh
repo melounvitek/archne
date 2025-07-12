@@ -40,6 +40,12 @@ install_dir waybar
 fetch_or_copy waybar config.jsonc
 fetch_or_copy waybar style.css
 
+echo "Installing DroidSansMono Nerd Font locally…"
+mkdir -p "$HOME/.local/share/fonts"
+curl -fLo "$HOME/.local/share/fonts/DroidSansMNerdFont-Regular.otf" \
+  https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf
+fc-cache -f
+
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo "Installing zsh…"
