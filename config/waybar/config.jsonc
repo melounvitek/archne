@@ -26,6 +26,7 @@
         "clock#time",
     ],
     "modules-right": [
+	"pulseaudio",
         "battery",
         "network"
     ],
@@ -35,6 +36,19 @@
     // Modules
     // -------------------------------------------------------------------------
 
+     "pulseaudio": {
+     "format": "{icon}   {volume}%",
+     "format-icons": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "format-muted": "",
+     "min-width": 60,
+     "tooltip": false,
+     "on-click": "pavucontrol"
+    },
     "battery": {
         "interval": 10,
         "states": {
