@@ -13,7 +13,8 @@ $SUDO pacman -Syu --needed \
   hyprland kitty dolphin wofi waybar hyprpaper \
   grim slurp wl-clipboard brightnessctl playerctl \
   swaylock xdg-desktop-portal-hyprland \
-  network-manager-applet firefox
+  network-manager-applet firefox pipewire-pulse \
+  git base-devel
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
@@ -24,7 +25,9 @@ fetch_or_copy() {
   dst="$HOME/.config/$sub/$file"
   if [[ -f "$src" ]]; then
     cp "$src" "$dst"
-  else curl -fsSL "$GITHUB_RAW/$sub/$file" -o "$dst"; fi
+  else
+    curl -fsSL "$GITHUB_RAW/$sub/$file" -o "$dst"
+  fi
   echo " → $sub/$file"
 }
 
@@ -82,11 +85,11 @@ fi
 read -rp "Install Neovim with LazyVim? (y/n) " yn
 if [[ $yn =~ ^[Yy] ]]; then
   echo "Installing neovim…"
-  $SUDO pacman -S --needed neovim git
+  $SUDO pacman -S --needed neovim
   echo "Setting up LazyVim…"
   rm -rf "$HOME/.config/nvim"
   git clone https://github.com/LazyVim/starter ~/.config/nvim
-  echo "Launching Neovim to finalize setup..."
+  echo "Finalizing LazyVim install…"
   nvim --headless +"Lazy! sync" +qa
 else
   echo "Skipping Neovim + LazyVim."
