@@ -54,6 +54,13 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   echo "Changing default shell to zsh…"
   chsh -s "$(command -v zsh)"
+
+  # ─ Add your custom aliases if not already present ─
+  ZSHRC="$HOME/.zshrc"
+  grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -it"' >>"$ZSHRC"
+  grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
+  echo "Added aliases to $ZSHRC"
+
 fi
 
 echo
