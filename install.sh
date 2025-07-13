@@ -123,7 +123,7 @@ fi
 read -rp "Install Neovim with LazyVim? (y/n) " yn
 if [[ $yn =~ ^[Yy] ]]; then
   echo "Installing neovim…"
-  $SUDO pacman -S --needed neovim
+  $SUDO pacman -S --needed neovim fd
   echo "Setting up LazyVim…"
   rm -rf "$HOME/.config/nvim"
   git clone https://github.com/LazyVim/starter ~/.config/nvim
