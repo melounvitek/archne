@@ -113,7 +113,7 @@
     "network": {
         "interval": 5,
         "format-wifi": "    {essid} ({signalStrength}%)", // Icon: wifi
-        "format-ethernet": "󰈁", // Icon: ethernet
+        "format-ethernet": "󱊪   LAN", // Icon: ethernet
         "format-disconnected": "⚠  Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}"
     },
