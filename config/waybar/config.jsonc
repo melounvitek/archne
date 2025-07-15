@@ -26,9 +26,10 @@
         "clock#time",
     ],
     "modules-right": [
-	"pulseaudio",
+        "pulseaudio",
         "battery",
-        "network"
+        "network",
+        "custom/unread-notifications"
     ],
 
 
@@ -98,6 +99,13 @@
       "format": "  {}", // Icon: keyboard
       // Signal sent by Sway key binding (~/.config/sway/key-bindings)
       "signal": 1, // SIGHUP
+      "tooltip": false
+    },
+
+    "custom/unread-notifications": {
+      "exec": "dunstctl count waiting",
+      "interval": 30,
+      "format": "     {}   ",
       "tooltip": false
     },
 
