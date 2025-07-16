@@ -69,7 +69,7 @@
 
     "clock#time": {
         "interval": 1,
-        "format": "{:%H:%M}",
+        "format": "{:%H:%M:%S}",
       	"tooltip-format": "{:%e %B %Y}"
     },
 
