@@ -16,8 +16,7 @@
     "position": "top",
 
     "modules-left": [
-        "memory",
-        "cpu",
+        "hyprland/workspaces",
     ],
     "modules-center": [
         "clock#time",
@@ -26,7 +25,6 @@
         "pulseaudio",
         "battery",
         "network",
-        "custom/unread-notifications"
     ],
 
 
@@ -133,6 +131,13 @@
         "max-length": 120
     },
 
+    "hyprland/workspaces": {
+      "format": "{icon}",
+      "format-icons": {
+        "active": "",
+        "default": ""
+      }
+    },
     "sway/workspaces": {
         "all-outputs": false,
         "disable-scroll": true,
@@ -142,10 +147,6 @@
             "2:mail": "", // Icon: mail
             "3:editor": "", // Icon: code
             "4:terminals": "", // Icon: terminal
-            "5:portal": "", // Icon: terminal
-            "urgent": "",
-            "focused": "",
-            "default": ""
         }
     },
 
