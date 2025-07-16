@@ -136,6 +136,9 @@
       "format-icons": {
         "active": "",
         "default": ""
+      },
+      "persistent-workspaces": {
+        "*": 4
       }
     },
     "sway/workspaces": {
