@@ -14,7 +14,7 @@ $SUDO pacman -Syu --needed \
   grim slurp wl-clipboard brightnessctl playerctl \
   swaylock xdg-desktop-portal-hyprland \
   network-manager-applet firefox pipewire-pulse \
-  git base-devel zsh dunst pavucontrol swappy fd libnotify
+  git base-devel zsh dunst pavucontrol swappy fd libnotify tmux
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
