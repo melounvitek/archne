@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Ask for name and URL
+read -p "App name: " name
+read -p "URL: " url
+
+# sanitize name for filename & Icon
+slug=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+
+# ensure target dir exists
+mkdir -p ~/.local/share/applications
+
+# write .desktop
+cat > ~/.local/share/applications/${slug}.desktop <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=${name}
+Exec=chromium --ozone-platform=wayland --app=${url}
+Icon=${slug}
+Terminal=false
+Categories=Network;InstantMessaging;
+EOF
+
+echo "Created ~/.local/share/applications/${slug}.desktop"
+
