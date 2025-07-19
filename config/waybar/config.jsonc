@@ -118,7 +118,8 @@
         "format-wifi": "    {signalStrength} %", // Icon: wifi
         "format-ethernet": "󱊪   LAN", // Icon: ethernet
         "format-disconnected": "⚠  Disconnected",
-        "tooltip-format": "{essid}\n{ipaddr}"
+        "tooltip-format-wifi":      "{essid}\n{ipaddr}",
+        "tooltip-format-ethernet":  "{ipaddr}"
     },
 
     "sway/mode": {
