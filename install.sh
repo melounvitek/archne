@@ -15,7 +15,7 @@ $SUDO pacman -Syu --needed \
   swaylock xdg-desktop-portal-hyprland \
   network-manager-applet firefox pipewire-pulse \
   git base-devel zsh dunst pavucontrol swappy fd libnotify \
-  tmux chromium
+  tmux chromium unzip mpv
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
