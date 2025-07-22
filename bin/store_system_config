@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cp ~/.config/hypr/hyprland.conf config/hypr/
+cp ~/.config/waybar/* config/waybar
