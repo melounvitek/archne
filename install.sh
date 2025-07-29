@@ -15,7 +15,8 @@ $SUDO pacman -Syu --needed \
   swaylock xdg-desktop-portal-hyprland \
   network-manager-applet firefox pipewire-pulse \
   git base-devel zsh dunst pavucontrol swappy fd libnotify \
-  tmux chromium unzip mpv
+  tmux chromium unzip mpv transmission-gtk blueman bluez \
+  bluez-utils
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
@@ -46,6 +47,8 @@ mkdir -p "$HOME/.local/share/fonts"
 curl -fLo "$HOME/.local/share/fonts/DroidSansMNerdFont-Regular.otf" \
   https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf
 fc-cache -f
+
+systemctl start bluetooth.service
 
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
