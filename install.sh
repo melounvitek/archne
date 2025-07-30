@@ -37,7 +37,7 @@ echo
 echo "Setting up configs…"
 install_dir hypr
 fetch_or_copy hypr hyprland.conf
-touch .config/hypr/local_overrides.conf
+touch ~/.config/hypr/local_overrides.conf
 
 install_dir waybar
 fetch_or_copy waybar config.jsonc
