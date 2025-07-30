@@ -16,7 +16,7 @@ $SUDO pacman -Syu --needed \
   network-manager-applet firefox pipewire-pulse \
   git base-devel zsh dunst pavucontrol swappy fd libnotify \
   tmux chromium unzip mpv transmission-gtk blueman bluez \
-  bluez-utils wev
+  bluez-utils wev less vim
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
@@ -50,6 +50,9 @@ curl -fLo "$HOME/.local/share/fonts/DroidSansMNerdFont-Regular.otf" \
 fc-cache -f
 
 systemctl start bluetooth.service
+
+git config --global --replace-all core.pager "less -F -X"
+git config --global core.editor "vim"
 
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
