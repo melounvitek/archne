@@ -16,7 +16,7 @@ $SUDO pacman -Syu --needed \
   network-manager-applet firefox pipewire-pulse \
   git base-devel zsh dunst pavucontrol swappy fd libnotify \
   tmux chromium unzip mpv transmission-gtk blueman bluez \
-  bluez-utils
+  bluez-utils wev
 
 install_dir() { mkdir -p "$HOME/.config/$1"; }
 
