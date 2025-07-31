@@ -54,6 +54,14 @@ systemctl start bluetooth.service
 git config --global --replace-all core.pager "less -F -X"
 git config --global core.editor "vim"
 
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+cd ..
+rm -rf yay
+yay -S walker-bin
+
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo "Installing zsh…"
