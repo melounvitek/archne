@@ -80,6 +80,27 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
 fi
 
 echo
+# ─ Optional: Autologin ───────────────────────────────────────
+read -rp "Enable auto-login? (y/n) " yn
+if [[ $yn =~ ^[Yy] ]]; then
+  echo "Enabling auto-login…"
+  $SUDO pacman -S --needed greetd
+
+  current_user=$(logname)
+  config="/etc/greetd/config.toml"
+
+  $SUDO bash -c "cat >> $config <<EOF
+
+[initial_session]
+command = \"hyprland\"
+user = \"$current_user\"
+EOF"
+
+  $SUDO systemctl enable greetd.service
+else
+  echo "Skipping auto-login."
+fi
+
 # ─ Optional: Mise ───────────────────────────────────────
 read -rp "Install Mise and configure Ruby build opts? (y/n) " yn
 if [[ $yn =~ ^[Yy] ]]; then
