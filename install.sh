@@ -75,13 +75,14 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo "Changing default shell to zsh…"
   chsh -s "$(command -v zsh)"
 
-  # ─ Add your custom aliases if not already present ─
-  ZSHRC="$HOME/.zshrc"
-  grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -it"' >>"$ZSHRC"
-  grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
-  echo "Added aliases to $ZSHRC"
-
 fi
+
+# ─ Add custom aliases if not already present ─
+ZSHRC="$HOME/.zshrc"
+grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -it"' >>"$ZSHRC"
+grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
+grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
+echo "Added aliases to $ZSHRC"
 
 echo
 # ─ Optional: Autologin ───────────────────────────────────────
