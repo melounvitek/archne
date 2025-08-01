@@ -24,6 +24,7 @@
     "modules-right": [
         "pulseaudio",
         "battery",
+        "custom/bluetooth",
         "network",
     ],
 
@@ -183,6 +184,13 @@
           ""  // Icon: temperature-full
       ],
       "tooltip": true
+    },
+    "custom/bluetooth": {
+      "exec": "bash -c \"bluetoothctl show | grep -q 'Powered: yes' && echo '' || echo ''\"",
+      "interval": 15,
+      "format": " {} ",
+      "tooltip": false,
+      "on-click": "blueman-manager"
     },
 
     "tray": {
