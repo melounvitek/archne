@@ -54,13 +54,17 @@ systemctl enable --now bluetooth.service
 git config --global --replace-all core.pager "less -F -X"
 git config --global core.editor "vim"
 
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
+if ! command -v yay &>/dev/null; then
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si
+  cd ..
+  rm -rf yay
+fi
 
-cd ..
-rm -rf yay
-yay -S walker-bin
+if ! pacman -Qi walker-bin &>/dev/null; then
+  yay -S walker-bin
+fi
 
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
