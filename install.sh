@@ -49,7 +49,7 @@ curl -fLo "$HOME/.local/share/fonts/DroidSansMNerdFont-Regular.otf" \
   https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf
 fc-cache -f
 
-systemctl start bluetooth.service
+systemctl enable --now bluetooth.service
 
 git config --global --replace-all core.pager "less -F -X"
 git config --global core.editor "vim"
