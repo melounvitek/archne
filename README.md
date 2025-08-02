@@ -7,6 +7,5 @@ bash <(curl https://raw.githubusercontent.com/melounvitek/archne/main/install.sh
 ```
 
 ## Screenshots
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b7ae08e6-75d7-4e8d-9c2c-77dcf1e40f27" />
-
-<img width="1920" height="1075" alt="image" src="https://github.com/user-attachments/assets/f1d25254-a7e2-4397-acea-48648ce13d98" />
+<img width="2558" height="1600" alt="image" src="https://github.com/user-attachments/assets/2a721846-1954-46bf-a118-ca8073874192" />
+<img width="2558" height="1600" alt="image" src="https://github.com/user-attachments/assets/07fe273a-218e-4196-86e8-ad23d6e8cd13" />
