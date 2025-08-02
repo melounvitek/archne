@@ -193,3 +193,10 @@
     border-color: #c9545d;
     color: #c9545d;
 }
+
+#workspaces button:hover {
+  background: none;
+  box-shadow: none;
+  opacity: 1;
+}
+
