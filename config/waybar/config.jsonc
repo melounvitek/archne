@@ -34,28 +34,28 @@
     // -------------------------------------------------------------------------
 
      "pulseaudio": {
-     "format": "{icon}   {volume}%",
+     "format": "{icon}",
      "format-icons": [
       "",
-      "",
-      "",
-      ""
+      "",
+      "",
+      ""
      ],
-     "format-muted": " x",
+     "format-muted": "",
      "min-width": 60,
-     "tooltip": false,
+     "tooltip-format": " {volume}%",
      "on-click": "pavucontrol"
     },
     "battery": {
         "interval": 10,
         "states": {
-            "warning": 30,
-            "critical": 15
+            "warning": 20,
+            "critical": 10
         },
         // Connected to AC
-        "format": " {icon}   {capacity}%", // Icon: bolt
+        "format": " {icon}", // Icon: bolt
         // Not connected to AC
-        "format-discharging": "{icon}    {capacity}%",
+        "format-discharging": "{icon}",
         "format-icons": [
             "", // Icon: battery-full
             "", // Icon: battery-three-quarters
@@ -116,10 +116,10 @@
 
     "network": {
         "interval": 5,
-        "format-wifi": "    {signalStrength} %", // Icon: wifi
-        "format-ethernet": "󱊪   LAN", // Icon: ethernet
-        "format-disconnected": "⚠  Disconnected",
-        "tooltip-format-wifi":      "{essid}\n{ipaddr}",
+        "format-wifi": " ", // Icon: wifi
+        "format-ethernet": "󱊪", // Icon: ethernet
+        "format-disconnected": "⚠ ",
+        "tooltip-format-wifi":      "{essid} {signalStrength}%\n{ipaddr}",
         "tooltip-format-ethernet":  "{ipaddr}"
     },
 
