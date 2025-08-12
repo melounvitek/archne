@@ -1,26 +1,75 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Ask for name and URL
 read -p "App name: " name
 read -p "URL: " url
 
 # sanitize name for filename & Icon
-slug=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+slug=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/-\+/-/g; s/^-//; s/-$//')
 
-# ensure target dir exists
-mkdir -p ~/.local/share/applications
+apps_dir="$HOME/.local/share/applications"
+icons_dir="$HOME/.local/share/icons/custom-apps"
+mkdir -p "$apps_dir" "$icons_dir"
+
+scheme=$(printf '%s\n' "$url" | awk -F:// '{print $1}')
+host=$(printf '%s\n' "$url" | awk -F/ '{print $3}')
+base="${scheme}://${host}"
+
+# Try to find a favicon from the page, else /favicon.ico, else Google service
+html="$(curl -sL "$url" || true)"
+fav_rel=$(printf '%s' "$html" \
+  | grep -oiE '<link[^>]+rel="[^"]*icon[^"]*"[^>]*>' \
+  | head -n1 \
+  | sed -n 's/.*href=["'\'']\([^"'\'' ]\+\).*/\1/p' || true)
+
+# Resolve to absolute URL
+if [[ -n "${fav_rel:-}" ]]; then
+  if [[ "$fav_rel" =~ ^https?:// ]]; then
+    fav_url="$fav_rel"
+  elif [[ "$fav_rel" =~ ^// ]]; then
+    fav_url="${scheme}:${fav_rel}"
+  elif [[ "$fav_rel" =~ ^/ ]]; then
+    fav_url="${base}${fav_rel}"
+  else
+    # relative path like images/icon.png
+    fav_url="${base}/$fav_rel"
+  fi
+else
+  fav_url="${base}/favicon.ico"
+fi
+
+# Verify it exists; if not, use Google’s favicon endpoint (PNG)
+if ! curl -fsIL "$fav_url" >/dev/null 2>&1; then
+  fav_url="https://www.google.com/s2/favicons?domain=${host}&sz=128"
+fi
+
+# Pick file extension from content-type (default png)
+ctype=$(curl -sIL "$fav_url" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')
+case "${ctype:-}" in
+  *svg*) ext=svg ;;
+  *png*) ext=png ;;
+  *jpeg*|*jpg*) ext=jpg ;;
+  *ico*|*vnd.microsoft.icon*) ext=ico ;;
+  *) ext=png ;;
+esac
+
+icon_path="${icons_dir}/${slug}.${ext}"
+curl -sL "$fav_url" -o "$icon_path"
 
 # write .desktop
-cat > ~/.local/share/applications/${slug}.desktop <<EOF
+desk_path="${apps_dir}/${slug}.desktop"
+cat > "$desk_path" <<EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
 Name=${name}
 Exec=chromium --ozone-platform=wayland --app=${url}
-Icon=${slug}
+Icon=${icon_path}
 Terminal=false
 Categories=Network;InstantMessaging;
 EOF
 
-echo "Created ~/.local/share/applications/${slug}.desktop"
+echo "Created $desk_path"
+echo "Icon saved to $icon_path"
 
