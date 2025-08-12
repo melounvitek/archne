@@ -178,6 +178,15 @@ if [[ $yn =~ ^[Yy] ]]; then
   git clone https://github.com/LazyVim/starter ~/.config/nvim
   echo "Finalizing LazyVim install…"
   nvim --headless +"Lazy! sync" +qa
+
+  # Disable autoformat (Rubocop, etc.) on save in LazyVim
+  NVIM_CFG="$HOME/.config/nvim/lua/config"
+  mkdir -p "$NVIM_CFG"
+  # Create or append without duplicating
+  if ! grep -q 'vim.g.autoformat' "$NVIM_CFG/options.lua" 2>/dev/null; then
+    echo 'vim.g.autoformat = false' >> "$NVIM_CFG/options.lua"
+  fi
+  rm -rf ~/.local/share/nvim/lazy && nvim --headless "+Lazy! restore" +qa
 else
   echo "Skipping Neovim + LazyVim."
 fi
