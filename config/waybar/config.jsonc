@@ -117,7 +117,7 @@
     "network": {
         "interval": 5,
         "format-wifi": " ", // Icon: wifi
-        "format-ethernet": "󱊪", // Icon: ethernet
+        "format-ethernet": "󱊪 ", // Icon: ethernet
         "format-disconnected": "⚠ ",
         "tooltip-format-wifi":      "{essid} {signalStrength}%\n{ipaddr}",
         "tooltip-format-ethernet":  "{ipaddr}"
