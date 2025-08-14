@@ -36,15 +36,10 @@ if ! grep -Fxq "$LINE" "$HYPR_CFG" 2>/dev/null; then
   echo "$LINE" >> "$HYPR_CFG"
 fi
 
-git config --global --replace-all core.pager "less -F -X"
-git config --global core.editor "vim"
-
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo "Installing Oh My Zsh…"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  echo "Changing default shell to zsh…"
-  chsh -s "$(command -v zsh)"
 fi
 
 # ─ Add custom aliases if not already present ─
@@ -53,6 +48,12 @@ grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -
 grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
 grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
 echo "Added aliases to $ZSHRC"
+
+echo "Changing default shell to zsh…"
+$SUDO chsh -s "$(command -v zsh)" $(whoami)
+
+git config --global --replace-all core.pager "less -F -X"
+git config --global core.editor "vim"
 
 
 if ! command -v syncthing >/dev/null 2>&1; then
