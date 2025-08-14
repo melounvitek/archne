@@ -59,7 +59,11 @@ NVIM_CFG="$HOME/.config/nvim/lua/config"
 mkdir -p "$NVIM_CFG"
 cp config/nvim/lua/config/options.lua $NVIM_CFG
 
-echo "Installing syncthing…"
-$SUDO pacman -S --needed syncthing
-echo "Enabling Syncthing (user service)…"
-systemctl --user enable --now syncthing.service
+if ! command -v syncthing >/dev/null 2>&1; then
+  echo "Installing Syncthing…"
+  $SUDO pacman -S --needed syncthing
+  echo "Enabling Syncthing (user service)…"
+  systemctl --user enable --now syncthing.service
+else
+  echo "Syncthing already installed, skipping."
+fi
