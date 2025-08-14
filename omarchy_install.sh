@@ -27,6 +27,7 @@ fetch_or_copy() {
 echo
 echo "Setting up configs…"
 fetch_or_copy hypr archne.conf
+fetch_or_copy nvim/lua/config options.lua
 
 HYPR_CFG="$HOME/.config/hypr/hyprland.conf"
 LINE='source = ~/.config/hypr/archne.conf'
@@ -55,9 +56,6 @@ grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"
 grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
 echo "Added aliases to $ZSHRC"
 
-NVIM_CFG="$HOME/.config/nvim/lua/config"
-mkdir -p "$NVIM_CFG"
-cp config/nvim/lua/config/options.lua $NVIM_CFG
 
 if ! command -v syncthing >/dev/null 2>&1; then
   echo "Installing Syncthing…"
