@@ -9,7 +9,7 @@ GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
 ((EUID != 0)) && SUDO=sudo || SUDO=
 
 echo "Updating & installing core packages…"
-$SUDO pacman -Syu --needed less vim
+$SUDO pacman -Syu --needed less vim zsh syncthing
 
 fetch_or_copy() {
   sub=$1
@@ -41,8 +41,6 @@ git config --global core.editor "vim"
 
 # ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-  echo "Installing zsh…"
-  $SUDO pacman -S --needed zsh
   echo "Installing Oh My Zsh…"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   echo "Changing default shell to zsh…"
@@ -58,8 +56,6 @@ echo "Added aliases to $ZSHRC"
 
 
 if ! command -v syncthing >/dev/null 2>&1; then
-  echo "Installing Syncthing…"
-  $SUDO pacman -S --needed syncthing
   echo "Enabling Syncthing (user service)…"
   systemctl --user enable --now syncthing.service
 else
