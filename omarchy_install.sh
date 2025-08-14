@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-wget -qO- https://omarchy.org/install | bash
-
 # ––– CONFIG –––
 GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
