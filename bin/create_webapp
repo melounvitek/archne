@@ -64,7 +64,7 @@ cat > "$desk_path" <<EOF
 Version=1.0
 Type=Application
 Name=${name}
-Exec=chromium --ozone-platform=wayland --app=${url}
+Exec=google-chrome-stable --ozone-platform=wayland --app=${url}
 Icon=${icon_path}
 Terminal=false
 Categories=Network;InstantMessaging;
