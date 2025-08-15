@@ -10,6 +10,7 @@ GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
 
 echo "Updating & installing core packages…"
 $SUDO pacman -Syu --needed less vim zsh syncthing htop
+$SUDO yay -S --needed google-chrome
 
 fetch_or_copy() {
   sub=$1
