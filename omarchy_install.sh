@@ -54,17 +54,16 @@ echo "Added aliases to $ZSHRC"
 grep -qxF 'eval "$(mise activate zsh)"' "$ZSHRC" || echo 'eval "$(mise activate zsh)"' >>"$ZSHRC"
 echo "Mise activated in $ZSHRC"
 
-
 echo "Changing default shell to zsh…"
 $SUDO chsh -s "$(command -v zsh)" $(whoami)
 
 git config --global --replace-all core.pager "less -F -X"
 git config --global core.editor "vim"
 
+echo "Enabling Syncthing (user service)…"
+systemctl --user enable --now syncthing.service
 
-if ! command -v syncthing >/dev/null 2>&1; then
-  echo "Enabling Syncthing (user service)…"
-  systemctl --user enable --now syncthing.service
-else
-  echo "Syncthing already installed, skipping."
-fi
+echo "Preparing Walker patch to open Chromium webapps in Chrome.."
+mkdir -p ~/bin && ln -sf /usr/bin/google-chrome-stable ~/bin/chromium
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/walker/config.toml"
+grep -q 'PATH=$HOME/bin:$PATH' "$cfg" || sed -i '/launch_prefix/s|uwsm|PATH=$HOME/bin:$PATH uwsm|' "$cfg"
