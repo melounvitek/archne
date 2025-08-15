@@ -9,7 +9,7 @@ GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
 ((EUID != 0)) && SUDO=sudo || SUDO=
 
 echo "Updating & installing core packages…"
-$SUDO pacman -Syu --needed less vim zsh syncthing
+$SUDO pacman -Syu --needed less vim zsh syncthing htop
 
 fetch_or_copy() {
   sub=$1
