@@ -49,6 +49,11 @@ grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"
 grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
 echo "Added aliases to $ZSHRC"
 
+
+grep -qxF 'eval "$(mise activate zsh)"' "$ZSHRC" || echo 'eval "$(mise activate zsh)"' >>"$ZSHRC"
+echo "Mise activated in $ZSHRC"
+
+
 echo "Changing default shell to zsh…"
 $SUDO chsh -s "$(command -v zsh)" $(whoami)
 
