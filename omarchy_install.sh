@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ––– CONFIG –––
-GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/"
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 
-# privilege helper
 ((EUID != 0)) && SUDO=sudo || SUDO=
 
 echo
@@ -19,13 +16,13 @@ fetch_or_copy() {
   if [[ -f "$src_file" ]]; then
     cp "$src_file" "$dst"
   else
-    curl -fsSL "$GITHUB_RAW/$src_file" -o "$dst"
+    curl -fsSL "$GITHUB_REPO/$src_file" -o "$dst"
   fi
   echo " → $src_file"
 }
 
 echo
-echo "Setting up configs…"
+echo "Copying configs…"
 fetch_or_copy config/hypr/archne.conf
 fetch_or_copy config/nvim/lua/config/options.lua
 
@@ -44,6 +41,7 @@ fetch_or_copy local/share/applications/Messenger.desktop
 fetch_or_copy local/share/applications/icons/Messenger.png
 echo
 
+echo "Source Archne in Hyprland config…"
 HYPR_CFG="$HOME/.config/hypr/hyprland.conf"
 LINE='source = ~/.config/hypr/archne.conf'
 
@@ -51,31 +49,31 @@ if ! grep -Fxq "$LINE" "$HYPR_CFG" 2>/dev/null; then
   echo "$LINE" >> "$HYPR_CFG"
 fi
 
-# ─ Zsh + Oh My Zsh ───────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo
   echo "Installing Oh My Zsh…"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
-# ─ Add custom aliases if not already present ─
+echo "Adding custom aliases…"
 ZSHRC="$HOME/.zshrc"
 grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -it"' >>"$ZSHRC"
 grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
 grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
-echo "Added aliases to $ZSHRC"
 
 
+echo "Ensuring Mise is activated in $ZSHRC…"
 grep -qxF 'eval "$(mise activate zsh)"' "$ZSHRC" || echo 'eval "$(mise activate zsh)"' >>"$ZSHRC"
-echo "Mise activated in $ZSHRC"
 echo
 
 echo "Changing default shell to zsh…"
 $SUDO chsh -s "$(command -v zsh)" $(whoami)
 echo
 
+echo "Adding some Git configuration…"
 git config --global --replace-all core.pager "less -F -X"
 git config --global core.editor "vim"
+echo
 
 echo "Enabling Syncthing (user service)…"
 systemctl --user enable --now syncthing.service
