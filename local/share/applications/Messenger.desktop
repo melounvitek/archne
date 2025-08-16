@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Messenger
+Comment=Messenger
+Exec=chromium --new-window --ozone-platform=wayland --app="https://messenger.com" --name="Messenger" --class="Messenger"
+Terminal=false
+Type=Application
+Icon=/home/vitek/.local/share/applications/icons/Messenger.png
+StartupNotify=true

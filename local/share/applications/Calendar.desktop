@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Calendar
+Comment=Calendar
+Exec=chromium --new-window --ozone-platform=wayland --app="https://calendar.google.com" --name="Calendar" --class="Calendar"
+Terminal=false
+Type=Application
+Icon=/home/vitek/.local/share/applications/icons/Calendar.png
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Freelo
+Comment=Freelo
+Exec=chromium --new-window --ozone-platform=wayland --app="https://app.freelo.io/project/425629/tasklists?layout=kanban" --name="Freelo" --class="Freelo"
+Terminal=false
+Type=Application
+Icon=/home/vitek/.local/share/applications/icons/Freelo.png
+StartupNotify=true
