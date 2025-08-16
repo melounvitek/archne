@@ -28,6 +28,8 @@ fetch_or_copy config/nvim/lua/config/options.lua
 
 echo
 echo "Copying web applications…"
+mkdir -p $HOME/.local/share/applications/icons/
+
 fetch_or_copy local/share/applications/Calendar.desktop
 fetch_or_copy local/share/applications/icons/Calendar.png
 
