@@ -33,8 +33,13 @@ echo
 echo "Copying web applications…"
 fetch_or_copy local/share/applications/Calendar.desktop
 fetch_or_copy local/share/applications/icons/Calendar.png
+
 fetch_or_copy local/share/applications/Freelo.desktop
 fetch_or_copy local/share/applications/icons/Freelo.png
+
+fetch_or_copy local/share/applications/Gmail.desktop
+fetch_or_copy local/share/applications/icons/Gmail.png
+
 fetch_or_copy local/share/applications/Messenger.desktop
 fetch_or_copy local/share/applications/icons/Messenger.png
 echo

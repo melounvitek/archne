@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Gmail
+Comment=Gmail
+Exec=chromium --new-window --ozone-platform=wayland --app="https://mail.google.com/mail/u/0/#inbox" --name="Gmail" --class="Gmail"
+Terminal=false
+Type=Application
+Icon=/home/vitek/.local/share/applications/icons/Gmail.png
+StartupNotify=true
