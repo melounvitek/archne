@@ -2,12 +2,13 @@
 set -euo pipefail
 
 # ––– CONFIG –––
-GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/config"
+GITHUB_RAW="https://raw.githubusercontent.com/melounvitek/archne/main/"
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 # privilege helper
 ((EUID != 0)) && SUDO=sudo || SUDO=
 
+echo
 echo "Updating & installing core packages…"
 $SUDO pacman -Syu --needed less vim zsh syncthing htop tree
 $SUDO yay -S --needed google-chrome
@@ -75,7 +76,7 @@ echo "Enabling Syncthing (user service)…"
 systemctl --user enable --now syncthing.service
 echo
 
-echo "Preparing Walker patch to open Chromium webapps in Chrome.."
+echo "Preparing Walker patch to open Chromium webapps in Chrome…"
 mkdir -p ~/bin && ln -sf /usr/bin/google-chrome-stable ~/bin/chromium
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}/walker/config.toml"
 grep -q 'PATH=$HOME/bin:$PATH' "$cfg" || sed -i '/launch_prefix/s|uwsm|PATH=$HOME/bin:$PATH uwsm|' "$cfg"
