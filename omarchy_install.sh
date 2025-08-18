@@ -7,7 +7,7 @@ GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 
 echo
 echo "Updating & installing core packages…"
-$SUDO pacman -Syu --needed less vim zsh syncthing htop tree transmission-gtk
+$SUDO pacman -Syu --needed less vim zsh syncthing htop tree transmission-gtk zoxide
 $SUDO yay -S --needed google-chrome
 
 fetch_or_copy() {
@@ -85,3 +85,8 @@ echo "Preparing Walker patch to open Chromium webapps in Chrome…"
 mkdir -p ~/bin && ln -sf /usr/bin/google-chrome-stable ~/bin/chromium
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}/walker/config.toml"
 grep -q 'PATH=$HOME/bin:$PATH' "$cfg" || sed -i '/launch_prefix/s|uwsm|PATH=$HOME/bin:$PATH uwsm|' "$cfg"
+echo
+
+echo "Activating Zoxide…"
+grep -qxF 'eval "$(zoxide init zsh)"' "$ZSHRC" || echo 'eval "$(zoxide init zsh)"' >>"$ZSHRC"
+echo
