@@ -74,7 +74,7 @@ echo
 
 echo "Adding some Git configuration…"
 git config --global --replace-all core.pager "less -F -X"
-git config --global core.editor "vim"
+git config --global core.editor "nvim"
 echo
 
 echo "Enabling Syncthing (user service)…"
