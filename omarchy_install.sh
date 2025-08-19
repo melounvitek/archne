@@ -73,7 +73,7 @@ $SUDO chsh -s "$(command -v zsh)" $(whoami)
 echo
 
 echo "Adding some Git configuration…"
-git config --global --replace-all core.pager "less -F -X"
+git config --global --replace-all core.pager "less"
 git config --global core.editor "nvim"
 echo
 
