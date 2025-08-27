@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Asana
+Comment=Asana
+Exec=omarchy-launch-webapp https://app.asana.com
+Terminal=false
+Type=Application
+Icon=/home/vitek/.local/share/applications/icons/Asana.png
+StartupNotify=true

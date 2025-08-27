@@ -44,6 +44,9 @@ fetch_or_copy local/share/applications/icons/Messenger.png
 
 fetch_or_copy local/share/applications/Syncthing.desktop
 fetch_or_copy local/share/applications/icons/Syncthing.png
+
+fetch_or_copy local/share/applications/Asana.desktop
+fetch_or_copy local/share/applications/icons/Asana.png
 echo
 
 echo "Source Archne in Hyprland config…"
