@@ -66,6 +66,7 @@ fi
 echo "Adding custom aliases…"
 ZSHRC="$HOME/.zshrc"
 grep -qxF 'alias de="docker exec -it"' "$ZSHRC" || echo 'alias de="docker exec -it"' >>"$ZSHRC"
+grep -qxF 'alias da="docker attach"' "$ZSHRC" || echo 'alias da="docker attach"' >>"$ZSHRC"
 grep -qxF 'alias be="bundle exec"' "$ZSHRC" || echo 'alias be="bundle exec"' >>"$ZSHRC"
 grep -qxF 'alias open="xdg-open"' "$ZSHRC" || echo 'alias open="xdg-open"' >>"$ZSHRC"
 
