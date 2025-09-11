@@ -7,8 +7,8 @@ GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 
 echo
 echo "Updating & installing core packages…"
-$SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide slack-desktop
-yay -S --needed --noconfirm google-chrome ookla-speedtest-bin
+$SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide
+yay -S --needed --noconfirm google-chrome ookla-speedtest-bin slack-desktop
 
 fetch_or_copy() {
   src_file=$1
