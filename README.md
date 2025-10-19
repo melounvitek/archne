@@ -1,9 +1,13 @@
-## UPDATE: project terminated
-It was fun, but I don't have the time to maintain my own Hyprland sitro. Since Omarchy appeared, I moved to that, and use a few small tweaks from Archne there.
+## UPDATE: project archived
+It was fun, but I don't have the time to maintain my own Hyprland sitro. Since Omarchy appeared, I moved to that, and use a few small tweaks from Archne there. Installation:
 
 ```bash
  bash <(curl https://raw.githubusercontent.com/melounvitek/archne/main/omarchy_install.sh)
 ```
+
+But it's simly my own personal project, tailored for my needs, so I don't think anyone else has a reason to try it :-).
+
+---
 
 ## About
 Archne is my one‑command configurator for a clean Arch Linux install: it sets up Hyprland, my core tools and optional extras (Ruby via Mise, Docker, Neovim, etc.).
