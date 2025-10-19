@@ -5,7 +5,7 @@ It was fun, but I don't have the time to maintain my own Hyprland sitro. Since O
  bash <(curl https://raw.githubusercontent.com/melounvitek/archne/main/omarchy_install.sh)
 ```
 
-But it's simly my own personal project, tailored for my needs, so I don't think anyone else has a reason to try it :-).
+But it's just my own personal configuration, tailored for my needs; I don't think anyone else has a reason to try it :-).
 
 ---
 
