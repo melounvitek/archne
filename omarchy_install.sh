@@ -90,7 +90,7 @@ echo
 
 echo "Get rid of the Omarchy-Chromium, and replace all calls to it (mostly from Walker) by Chrome"
 pacman -Qi omarchy-chromium &>/dev/null && yay -R omarchy-chromium
-sudo ln -s /usr/bin/google-chrome-stable /usr/local/bin/chromium
+sudo ln -sf /usr/bin/google-chrome-stable /usr/local/bin/chromium
 echo
 
 echo "Activating Zoxide…"
