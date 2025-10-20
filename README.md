@@ -1,5 +1,5 @@
 ## UPDATE: project archived
-It was fun, but I don't have the time to maintain my own Hyprland sitro. Since Omarchy appeared, I moved to that, and use a few small tweaks from Archne there. Installation:
+It was fun, but I don't have the time to maintain my own Hyprland ditro. Since Omarchy appeared meanwhile, I moved to it and use just a few small tweaks from Archne there. Installation:
 
 ```bash
  bash <(curl https://raw.githubusercontent.com/melounvitek/archne/main/omarchy_install.sh)
