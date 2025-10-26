@@ -23,6 +23,7 @@ fetch_or_copy() {
 
 echo
 echo "Copying configs…"
+touch ~/.config/hypr/local_overrides.conf
 fetch_or_copy config/hypr/archne.conf
 fetch_or_copy config/nvim/lua/config/options.lua
 
