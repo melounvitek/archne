@@ -93,3 +93,7 @@ echo
 echo "Activating Zoxide…"
 grep -qxF 'eval "$(zoxide init zsh)"' "$ZSHRC" || echo 'eval "$(zoxide init zsh)"' >>"$ZSHRC"
 echo
+
+echo "Enabling Google Account in Chromium…"
+omarchy-install-chromium-google-account
+echo
