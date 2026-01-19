@@ -27,6 +27,15 @@ touch ~/.config/hypr/local_overrides.conf
 fetch_or_copy config/hypr/archne.conf
 fetch_or_copy config/nvim/lua/config/options.lua
 
+echo "Copying hyprland scripts…"
+mkdir -p ~/.config/hypr/scripts
+if [[ -d "./config/hypr/scripts" ]]; then
+  cp -r ./config/hypr/scripts/* ~/.config/hypr/scripts/
+else
+  curl -fsSL "$GITHUB_REPO/config/hypr/scripts/smart-focus" -o ~/.config/hypr/scripts/smart-focus
+fi
+chmod +x ~/.config/hypr/scripts/*
+
 echo
 echo "Copying web applications…"
 mkdir -p $HOME/.local/share/applications/icons/
