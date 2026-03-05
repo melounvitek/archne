@@ -8,7 +8,7 @@ GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 echo
 echo "Updating & installing core packages…"
 $SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide bitwarden rsync
-yay -S --needed --noconfirm ookla-speedtest-bin slack-desktop
+yay -S --needed --noconfirm ookla-speedtest-bin
 
 fetch_or_copy() {
   src_file=$1
@@ -26,6 +26,12 @@ echo "Copying configs…"
 touch ~/.config/hypr/local_overrides.conf
 fetch_or_copy config/hypr/archne.conf
 fetch_or_copy config/nvim/lua/config/options.lua
+
+echo "Ensuring opencode-synced plugin…"
+OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
+if [[ -f "$OPENCODE_CFG" ]]; then
+  jq '.plugin = ((.plugin // []) + ["opencode-synced"] | unique)' "$OPENCODE_CFG" > "$OPENCODE_CFG.tmp" && mv "$OPENCODE_CFG.tmp" "$OPENCODE_CFG"
+fi
 
 echo "Copying hyprland scripts…"
 mkdir -p ~/.config/hypr/scripts
