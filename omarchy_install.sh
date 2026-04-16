@@ -33,15 +33,6 @@ if [[ -f "$OPENCODE_CFG" ]]; then
   jq '.plugin = ((.plugin // []) + ["opencode-synced"] | unique)' "$OPENCODE_CFG" > "$OPENCODE_CFG.tmp" && mv "$OPENCODE_CFG.tmp" "$OPENCODE_CFG"
 fi
 
-echo "Copying hyprland scripts…"
-mkdir -p ~/.config/hypr/scripts
-if [[ -d "./config/hypr/scripts" ]]; then
-  cp -r ./config/hypr/scripts/* ~/.config/hypr/scripts/
-else
-  curl -fsSL "$GITHUB_REPO/config/hypr/scripts/smart-focus" -o ~/.config/hypr/scripts/smart-focus
-fi
-chmod +x ~/.config/hypr/scripts/*
-
 echo
 echo "Copying web applications…"
 mkdir -p $HOME/.local/share/applications/icons/
