@@ -25,6 +25,7 @@ echo
 echo "Copying configs…"
 touch ~/.config/hypr/local_overrides.conf
 fetch_or_copy config/hypr/archne.conf
+fetch_or_copy config/hypr/hyprsunset.conf
 fetch_or_copy config/nvim/lua/config/options.lua
 
 echo "Ensuring opencode-synced plugin…"
@@ -66,6 +67,13 @@ LINE='source = ~/.config/hypr/archne.conf'
 if ! grep -Fxq "$LINE" "$HYPR_CFG" 2>/dev/null; then
   echo "$LINE" >> "$HYPR_CFG"
 fi
+
+echo "Enabling automatic nightlight…"
+HYPRSUNSET_AUTOSTART='exec-once = uwsm-app -- hyprsunset'
+HYPR_AUTOSTART_CFG="$HOME/.config/hypr/autostart.conf"
+touch "$HYPR_AUTOSTART_CFG"
+grep -qxF "$HYPRSUNSET_AUTOSTART" "$HYPR_AUTOSTART_CFG" || echo "$HYPRSUNSET_AUTOSTART" >> "$HYPR_AUTOSTART_CFG"
+omarchy restart hyprsunset
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo
