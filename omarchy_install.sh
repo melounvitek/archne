@@ -73,7 +73,7 @@ HYPRSUNSET_AUTOSTART='exec-once = uwsm-app -- hyprsunset'
 HYPR_AUTOSTART_CFG="$HOME/.config/hypr/autostart.conf"
 touch "$HYPR_AUTOSTART_CFG"
 grep -qxF "$HYPRSUNSET_AUTOSTART" "$HYPR_AUTOSTART_CFG" || echo "$HYPRSUNSET_AUTOSTART" >> "$HYPR_AUTOSTART_CFG"
-omarchy restart hyprsunset
+omarchy-restart-hyprsunset
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo
