@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+direction=${1:?direction required}
+
+active_window=$(hyprctl activewindow -j)
+active_address=$(jq -r '.address' <<<"$active_window")
+active_group_count=$(jq -r '.grouped | length' <<<"$active_window")
+
+if ((active_group_count > 0)); then
+  active_group_index=$(jq -r --arg active_address "$active_address" '.grouped | index($active_address)' <<<"$active_window")
+
+  case "$direction" in
+    l|u)
+      ((active_group_index > 0)) && hyprctl dispatch changegroupactive b
+      ;;
+    r|d)
+      ((active_group_index < active_group_count - 1)) && hyprctl dispatch changegroupactive f
+      ;;
+  esac
+else
+  hyprctl dispatch movefocus "$direction"
+fi

@@ -10,9 +10,15 @@ echo "Updating & installing core packages…"
 $SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide bitwarden rsync
 yay -S --needed --noconfirm ookla-speedtest-bin
 
+if ! command -v pi &>/dev/null; then
+  echo "Installing Pi…"
+  omarchy-npm-install @earendil-works/pi-coding-agent pi
+fi
+
 fetch_or_copy() {
   src_file=$1
   dst="$HOME/.$src_file"
+  mkdir -p "$(dirname "$dst")"
   if [[ -f "$src_file" ]]; then
     cp "$src_file" "$dst"
   else
@@ -26,6 +32,9 @@ echo "Copying configs…"
 touch ~/.config/hypr/local_overrides.conf
 fetch_or_copy config/hypr/archne.conf
 fetch_or_copy config/hypr/hyprsunset.conf
+fetch_or_copy config/hypr/scripts/group-aware-focus
+fetch_or_copy config/hypr/scripts/toggle-workspace-group
+chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
 
 echo "Ensuring opencode-synced plugin…"

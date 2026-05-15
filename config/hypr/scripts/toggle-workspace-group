@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+workspace_id=$(hyprctl activeworkspace -j | jq -r '.id')
+active_address=$(hyprctl activewindow -j | jq -r '.address // empty')
+
+mapfile -t addresses < <(
+  hyprctl clients -j | jq -r --argjson workspace_id "$workspace_id" '
+    [.[] | select(.workspace.id == $workspace_id and .mapped and (.floating | not))]
+    | sort_by(.at[1], .at[0])
+    | .[].address
+  '
+)
+
+if ((${#addresses[@]} < 2)); then
+  hyprctl dispatch togglegroup
+  exit 0
+fi
+
+if [[ -z "$active_address" ]]; then
+  active_address=${addresses[0]}
+fi
+
+grouped_count=$(hyprctl clients -j | jq -r --argjson workspace_id "$workspace_id" --argjson count "${#addresses[@]}" '
+  [.[] | select(.workspace.id == $workspace_id and .mapped and (.floating | not) and ((.grouped | length) == $count))]
+  | length
+')
+
+if ((grouped_count == ${#addresses[@]})); then
+  for address in "${addresses[@]}"; do
+    hyprctl dispatch focuswindow "address:$address"
+    hyprctl dispatch moveoutofgroup
+  done
+  hyprctl dispatch focuswindow "address:$active_address"
+  exit 0
+fi
+
+leader=${active_address}
+leader_json=$(hyprctl clients -j | jq -r --arg address "$leader" '.[] | select(.address == $address)')
+leader_x=$(jq -r '.at[0]' <<<"$leader_json")
+leader_y=$(jq -r '.at[1]' <<<"$leader_json")
+
+hyprctl dispatch focuswindow "address:$leader"
+hyprctl dispatch togglegroup
+
+for address in "${addresses[@]}"; do
+  [[ "$address" == "$leader" ]] && continue
+
+  window_json=$(hyprctl clients -j | jq -r --arg address "$address" '.[] | select(.address == $address)')
+  window_x=$(jq -r '.at[0]' <<<"$window_json")
+  window_y=$(jq -r '.at[1]' <<<"$window_json")
+
+  if ((window_x < leader_x)); then
+    direction=r
+  elif ((window_x > leader_x)); then
+    direction=l
+  elif ((window_y < leader_y)); then
+    direction=d
+  else
+    direction=u
+  fi
+
+  hyprctl dispatch focuswindow "address:$address"
+  hyprctl dispatch moveintogroup "$direction"
+done
+
+hyprctl dispatch focuswindow "address:$leader"
