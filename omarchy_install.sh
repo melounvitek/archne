@@ -36,6 +36,76 @@ fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
+fetch_or_copy local/bin/waybar-codex-usage
+chmod +x "$HOME/.local/bin/waybar-codex-usage"
+
+echo "Configuring Codex usage in Waybar…"
+python3 <<'PY'
+import shutil
+import time
+from pathlib import Path
+
+config_path = Path.home() / ".config/waybar/config.jsonc"
+style_path = Path.home() / ".config/waybar/style.css"
+timestamp = time.strftime("%Y%m%d%H%M%S")
+
+config = config_path.read_text()
+updated_config = config
+if not any(line.strip().rstrip(",") == '"custom/codex-usage"' for line in config.splitlines()):
+    marker = '    "battery"\n  ],'
+    if marker not in updated_config:
+        raise SystemExit("Could not find the end of Waybar's modules-right")
+    updated_config = updated_config.replace(
+        marker,
+        '    "battery",\n    "custom/codex-usage"\n  ],',
+        1,
+    )
+
+if '  "custom/codex-usage": {' not in updated_config:
+    marker = '  "cpu": {'
+    if marker not in updated_config:
+        raise SystemExit("Could not find Waybar's cpu module configuration")
+    module_config = '''  "custom/codex-usage": {
+    "exec": "waybar-codex-usage",
+    "return-type": "json",
+    "interval": 60
+  },
+
+'''
+    updated_config = updated_config.replace(marker, module_config + marker, 1)
+
+style = style_path.read_text()
+updated_style = style
+if not any(line.strip() == "#custom-codex-usage {" for line in style.splitlines()):
+    updated_style = style.rstrip() + '''
+
+#custom-codex-usage {
+  min-width: 12px;
+  margin: 0 7.5px;
+}
+
+#custom-codex-usage.warning {
+  color: #e0af68;
+}
+
+#custom-codex-usage.critical {
+  color: #a55555;
+}
+
+#custom-codex-usage.unavailable {
+  opacity: 0.5;
+}
+'''
+
+for path, original, updated in (
+    (config_path, config, updated_config),
+    (style_path, style, updated_style),
+):
+    if updated != original:
+        shutil.copy2(path, f"{path}.bak.{timestamp}")
+        path.write_text(updated)
+PY
+omarchy restart waybar
 
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"

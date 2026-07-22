@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+import json
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+from time import time
+from urllib.request import Request, urlopen
+
+AUTH_FILE = Path(os.environ.get("CODEX_AUTH_FILE", "~/.codex/auth.json")).expanduser()
+USAGE_URL = os.environ.get("CODEX_USAGE_URL", "https://chatgpt.com/backend-api/wham/usage")
+
+
+def emit(text, tooltip, style_class):
+    print(json.dumps({"text": text, "tooltip": tooltip, "class": style_class}))
+
+
+try:
+    auth = json.loads(AUTH_FILE.read_text())
+    tokens = auth["tokens"]
+    separator = "&" if "?" in USAGE_URL else "?"
+    request = Request(
+        f"{USAGE_URL}{separator}_={int(time())}",
+        headers={
+            "Authorization": f"Bearer {tokens['access_token']}",
+            "ChatGPT-Account-Id": tokens["account_id"],
+            "Cache-Control": "no-cache",
+            "User-Agent": "waybar-codex-usage/1.0",
+        },
+    )
+
+    with urlopen(request, timeout=10) as response:
+        usage = json.load(response)
+
+    rate_limit = usage["rate_limit"]
+    windows = (rate_limit.get("primary_window"), rate_limit.get("secondary_window"))
+    window = next(
+        window for window in windows if window and window.get("limit_window_seconds") == 604800
+    )
+    used = round(float(window["used_percent"]))
+    remaining = max(0, 100 - used)
+    reset_at = datetime.fromtimestamp(window["reset_at"]).astimezone()
+
+    if used >= 95:
+        style_class = "critical"
+    elif used >= 80:
+        style_class = "warning"
+    else:
+        style_class = "normal"
+
+    emit(
+        f"󰚩  {remaining}%",
+        f"Codex Weekly Usage\n{used}% used · {remaining}% remaining\nResets {reset_at:%a %d %b, %H:%M}",
+        style_class,
+    )
+except Exception as error:
+    print(f"Codex usage unavailable: {type(error).__name__}", file=sys.stderr)
+    emit("󰚩  ?", "Codex weekly usage unavailable", "unavailable")
