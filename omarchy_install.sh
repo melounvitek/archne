@@ -39,8 +39,9 @@ fetch_or_copy config/nvim/lua/config/options.lua
 fetch_or_copy local/bin/waybar-codex-usage
 chmod +x "$HOME/.local/bin/waybar-codex-usage"
 
-echo "Configuring Codex usage in Waybar…"
+echo "Configuring Waybar…"
 python3 <<'PY'
+import re
 import shutil
 import time
 from pathlib import Path
@@ -51,6 +52,26 @@ timestamp = time.strftime("%Y%m%d%H%M%S")
 
 config = config_path.read_text()
 updated_config = config
+
+clock_start = updated_config.find('  "clock": {')
+if clock_start == -1:
+    raise SystemExit("Could not find Waybar's clock module configuration")
+clock_end = updated_config.find("\n  },", clock_start)
+if clock_end == -1:
+    raise SystemExit("Could not find the end of Waybar's clock module configuration")
+clock_config = updated_config[clock_start:clock_end]
+updated_clock_config, replacements = re.subn(
+    r'(?m)^    "format": ".*",$',
+    '    "format": "{:L%H:%M · %a %d %b}",',
+    clock_config,
+    count=1,
+)
+if replacements != 1:
+    raise SystemExit("Could not find Waybar's clock format")
+updated_config = updated_config[:clock_start] + updated_clock_config + updated_config[clock_end:]
+
+updated_config = re.sub(r'"custom/weather",\s*', "", updated_config, count=1)
+
 if not any(line.strip().rstrip(",") == '"custom/codex-usage"' for line in config.splitlines()):
     marker = '    "battery"\n  ],'
     if marker not in updated_config:
