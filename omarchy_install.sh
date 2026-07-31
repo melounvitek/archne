@@ -68,6 +68,7 @@ updated_clock_config, replacements = re.subn(
 )
 if replacements != 1:
     raise SystemExit("Could not find Waybar's clock format")
+updated_clock_config = re.sub(r'(?m)^    "format-alt": ".*",\n', "", updated_clock_config, count=1)
 updated_config = updated_config[:clock_start] + updated_clock_config + updated_config[clock_end:]
 
 updated_config = re.sub(r'"custom/weather",\s*', "", updated_config, count=1)
