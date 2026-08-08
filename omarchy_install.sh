@@ -79,11 +79,11 @@ if battery_end == -1:
     raise SystemExit("Could not find the end of Waybar's battery module configuration")
 battery_config = updated_config[battery_start:battery_end]
 battery_formats = {
-    "format": "{capacity}% {icon}",
-    "format-discharging": "{capacity}% {icon}",
-    "format-charging": "{capacity}% {icon}",
-    "format-plugged": "{capacity}% ",
-    "format-full": "{capacity}% 󰂅",
+    "format": "{icon} {capacity}%",
+    "format-discharging": "{icon} {capacity}%",
+    "format-charging": "{icon} {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-full": "󰂅 {capacity}%",
 }
 for key, value in battery_formats.items():
     battery_config, replacements = re.subn(
