@@ -71,6 +71,31 @@ if replacements != 1:
 updated_clock_config = re.sub(r'(?m)^    "format-alt": ".*",\n', "", updated_clock_config, count=1)
 updated_config = updated_config[:clock_start] + updated_clock_config + updated_config[clock_end:]
 
+battery_start = updated_config.find('  "battery": {')
+if battery_start == -1:
+    raise SystemExit("Could not find Waybar's battery module configuration")
+battery_end = updated_config.find("\n  },", battery_start)
+if battery_end == -1:
+    raise SystemExit("Could not find the end of Waybar's battery module configuration")
+battery_config = updated_config[battery_start:battery_end]
+battery_formats = {
+    "format": "{capacity}% {icon}",
+    "format-discharging": "{capacity}% {icon}",
+    "format-charging": "{capacity}% {icon}",
+    "format-plugged": "{capacity}% ",
+    "format-full": "{capacity}% 󰂅",
+}
+for key, value in battery_formats.items():
+    battery_config, replacements = re.subn(
+        rf'(?m)^    "{key}": ".*",$',
+        f'    "{key}": "{value}",',
+        battery_config,
+        count=1,
+    )
+    if replacements != 1:
+        raise SystemExit(f"Could not find Waybar's battery {key}")
+updated_config = updated_config[:battery_start] + battery_config + updated_config[battery_end:]
+
 updated_config = re.sub(r'"custom/weather",\s*', "", updated_config, count=1)
 
 if not any(line.strip().rstrip(",") == '"custom/codex-usage"' for line in config.splitlines()):
