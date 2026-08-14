@@ -12,7 +12,7 @@ yay -S --needed --noconfirm ookla-speedtest-bin
 
 if ! command -v pi &>/dev/null; then
   echo "Installing Pi…"
-  omarchy-npm-install @earendil-works/pi-coding-agent pi
+  omarchy mise install npm:@earendil-works/pi-coding-agent pi
 fi
 
 fetch_or_copy() {
@@ -29,8 +29,13 @@ fetch_or_copy() {
 
 echo
 echo "Copying configs…"
-touch ~/.config/hypr/local_overrides.conf
-fetch_or_copy config/hypr/archne.conf
+LEGACY_LOCAL_OVERRIDES="$HOME/.config/hypr/local_overrides.conf"
+LOCAL_OVERRIDES="$HOME/.config/hypr/local_overrides.lua"
+if [[ -s "$LEGACY_LOCAL_OVERRIDES" && ! -s "$LOCAL_OVERRIDES" ]]; then
+  echo "Existing local_overrides.conf must be converted to Lua: $LOCAL_OVERRIDES"
+fi
+touch "$LOCAL_OVERRIDES"
+fetch_or_copy config/hypr/archne.lua
 fetch_or_copy config/hypr/hyprsunset.conf
 fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
@@ -68,20 +73,16 @@ fetch_or_copy local/share/applications/Netflix.desktop
 fetch_or_copy local/share/applications/icons/Netflix.png
 echo
 
-echo "Source Archne in Hyprland config…"
-HYPR_CFG="$HOME/.config/hypr/hyprland.conf"
-LINE='source = ~/.config/hypr/archne.conf'
+echo "Loading Archne in Hyprland config…"
+HYPR_CFG="$HOME/.config/hypr/hyprland.lua"
+LINE='require("hypr.archne")'
 
 if ! grep -Fxq "$LINE" "$HYPR_CFG" 2>/dev/null; then
   echo "$LINE" >> "$HYPR_CFG"
 fi
 
 echo "Enabling automatic nightlight…"
-HYPRSUNSET_AUTOSTART='exec-once = uwsm-app -- hyprsunset'
-HYPR_AUTOSTART_CFG="$HOME/.config/hypr/autostart.conf"
-touch "$HYPR_AUTOSTART_CFG"
-grep -qxF "$HYPRSUNSET_AUTOSTART" "$HYPR_AUTOSTART_CFG" || echo "$HYPRSUNSET_AUTOSTART" >> "$HYPR_AUTOSTART_CFG"
-omarchy-restart-hyprsunset
+omarchy restart hyprsunset
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo
@@ -120,5 +121,5 @@ grep -qxF 'eval "$(zoxide init zsh)"' "$ZSHRC" || echo 'eval "$(zoxide init zsh)
 echo
 
 echo "Enabling Google Account in Chromium…"
-omarchy-install-chromium-google-account
+omarchy install chromium google account
 echo
