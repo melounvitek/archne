@@ -4,6 +4,10 @@ set -euo pipefail
 workspace_id=$(hyprctl activeworkspace -j | jq -r '.id')
 active_address=$(hyprctl activewindow -j | jq -r '.address // empty')
 
+focus_window() {
+  hyprctl dispatch "hl.dsp.focus({ window = \"address:$1\" })"
+}
+
 mapfile -t addresses < <(
   hyprctl clients -j | jq -r --argjson workspace_id "$workspace_id" '
     [.[] | select(.workspace.id == $workspace_id and .mapped and (.floating | not))]
@@ -13,7 +17,7 @@ mapfile -t addresses < <(
 )
 
 if ((${#addresses[@]} < 2)); then
-  hyprctl dispatch togglegroup
+  hyprctl dispatch 'hl.dsp.group.toggle()'
   exit 0
 fi
 
@@ -28,10 +32,10 @@ grouped_count=$(hyprctl clients -j | jq -r --argjson workspace_id "$workspace_id
 
 if ((grouped_count == ${#addresses[@]})); then
   for address in "${addresses[@]}"; do
-    hyprctl dispatch focuswindow "address:$address"
-    hyprctl dispatch moveoutofgroup
+    focus_window "$address"
+    hyprctl dispatch 'hl.dsp.window.move({ out_of_group = true })'
   done
-  hyprctl dispatch focuswindow "address:$active_address"
+  focus_window "$active_address"
   exit 0
 fi
 
@@ -40,8 +44,8 @@ leader_json=$(hyprctl clients -j | jq -r --arg address "$leader" '.[] | select(.
 leader_x=$(jq -r '.at[0]' <<<"$leader_json")
 leader_y=$(jq -r '.at[1]' <<<"$leader_json")
 
-hyprctl dispatch focuswindow "address:$leader"
-hyprctl dispatch togglegroup
+focus_window "$leader"
+hyprctl dispatch 'hl.dsp.group.toggle()'
 
 for address in "${addresses[@]}"; do
   [[ "$address" == "$leader" ]] && continue
@@ -60,8 +64,8 @@ for address in "${addresses[@]}"; do
     direction=u
   fi
 
-  hyprctl dispatch focuswindow "address:$address"
-  hyprctl dispatch moveintogroup "$direction"
+  focus_window "$address"
+  hyprctl dispatch "hl.dsp.window.move({ into_group = \"$direction\" })"
 done
 
-hyprctl dispatch focuswindow "address:$leader"
+focus_window "$leader"

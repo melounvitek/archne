@@ -2,6 +2,13 @@
 set -euo pipefail
 
 direction=${1:?direction required}
+case "$direction" in
+  l|r|u|d) ;;
+  *)
+    echo "Invalid direction: $direction" >&2
+    exit 1
+    ;;
+esac
 
 active_window=$(hyprctl activewindow -j)
 active_address=$(jq -r '.address' <<<"$active_window")
@@ -12,12 +19,16 @@ if ((active_group_count > 0)); then
 
   case "$direction" in
     l|u)
-      ((active_group_index > 0)) && hyprctl dispatch changegroupactive b
+      if ((active_group_index > 0)); then
+        hyprctl dispatch 'hl.dsp.group.prev()'
+      fi
       ;;
     r|d)
-      ((active_group_index < active_group_count - 1)) && hyprctl dispatch changegroupactive f
+      if ((active_group_index < active_group_count - 1)); then
+        hyprctl dispatch 'hl.dsp.group.next()'
+      fi
       ;;
   esac
 else
-  hyprctl dispatch movefocus "$direction"
+  hyprctl dispatch "hl.dsp.focus({ direction = \"$direction\" })"
 fi
