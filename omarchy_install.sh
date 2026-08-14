@@ -8,7 +8,7 @@ GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 echo
 echo "Updating & installing core packages…"
 $SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide bitwarden rsync
-yay -S --needed --noconfirm codexbar-cli ookla-speedtest-bin
+yay -S --needed --noconfirm ookla-speedtest-bin
 
 if ! command -v pi &>/dev/null; then
   echo "Installing Pi…"
@@ -36,124 +36,6 @@ fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
-fetch_or_copy local/bin/waybar-codex-usage
-chmod +x "$HOME/.local/bin/waybar-codex-usage"
-
-echo "Configuring Waybar…"
-python3 <<'PY'
-import re
-import shutil
-import time
-from pathlib import Path
-
-config_path = Path.home() / ".config/waybar/config.jsonc"
-style_path = Path.home() / ".config/waybar/style.css"
-timestamp = time.strftime("%Y%m%d%H%M%S")
-
-config = config_path.read_text()
-updated_config = config
-
-clock_start = updated_config.find('  "clock": {')
-if clock_start == -1:
-    raise SystemExit("Could not find Waybar's clock module configuration")
-clock_end = updated_config.find("\n  },", clock_start)
-if clock_end == -1:
-    raise SystemExit("Could not find the end of Waybar's clock module configuration")
-clock_config = updated_config[clock_start:clock_end]
-updated_clock_config, replacements = re.subn(
-    r'(?m)^    "format": ".*",$',
-    '    "format": "{:L%H:%M · %a %d %b}",',
-    clock_config,
-    count=1,
-)
-if replacements != 1:
-    raise SystemExit("Could not find Waybar's clock format")
-updated_clock_config = re.sub(r'(?m)^    "format-alt": ".*",\n', "", updated_clock_config, count=1)
-updated_config = updated_config[:clock_start] + updated_clock_config + updated_config[clock_end:]
-
-battery_start = updated_config.find('  "battery": {')
-if battery_start == -1:
-    raise SystemExit("Could not find Waybar's battery module configuration")
-battery_end = updated_config.find("\n  },", battery_start)
-if battery_end == -1:
-    raise SystemExit("Could not find the end of Waybar's battery module configuration")
-battery_config = updated_config[battery_start:battery_end]
-battery_formats = {
-    "format": "{icon} {capacity}%",
-    "format-discharging": "{icon} {capacity}%",
-    "format-charging": "{icon} {capacity}%",
-    "format-plugged": " {capacity}%",
-    "format-full": "󰂅 {capacity}%",
-}
-for key, value in battery_formats.items():
-    battery_config, replacements = re.subn(
-        rf'(?m)^    "{key}": ".*",$',
-        f'    "{key}": "{value}",',
-        battery_config,
-        count=1,
-    )
-    if replacements != 1:
-        raise SystemExit(f"Could not find Waybar's battery {key}")
-updated_config = updated_config[:battery_start] + battery_config + updated_config[battery_end:]
-
-updated_config = re.sub(r'"custom/weather",\s*', "", updated_config, count=1)
-
-if not any(line.strip().rstrip(",") == '"custom/codex-usage"' for line in config.splitlines()):
-    marker = '    "battery"\n  ],'
-    if marker not in updated_config:
-        raise SystemExit("Could not find the end of Waybar's modules-right")
-    updated_config = updated_config.replace(
-        marker,
-        '    "battery",\n    "custom/codex-usage"\n  ],',
-        1,
-    )
-
-if '  "custom/codex-usage": {' not in updated_config:
-    marker = '  "cpu": {'
-    if marker not in updated_config:
-        raise SystemExit("Could not find Waybar's cpu module configuration")
-    module_config = '''  "custom/codex-usage": {
-    "exec": "waybar-codex-usage",
-    "return-type": "json",
-    "interval": 60
-  },
-
-'''
-    updated_config = updated_config.replace(marker, module_config + marker, 1)
-
-style = style_path.read_text()
-updated_style = style
-if not any(line.strip() == "#custom-codex-usage {" for line in style.splitlines()):
-    updated_style = style.rstrip() + '''
-
-#custom-codex-usage {
-  min-width: 12px;
-  margin: 0 7.5px;
-}
-
-#custom-codex-usage.warning {
-  color: #e0af68;
-}
-
-#custom-codex-usage.critical {
-  color: #a55555;
-}
-
-#custom-codex-usage.unavailable {
-  opacity: 0.5;
-}
-'''
-
-for path, original, updated in (
-    (config_path, config, updated_config),
-    (style_path, style, updated_style),
-):
-    if updated != original:
-        shutil.copy2(path, f"{path}.bak.{timestamp}")
-        path.write_text(updated)
-PY
-omarchy restart waybar
-
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
 if [[ -f "$OPENCODE_CFG" ]]; then
