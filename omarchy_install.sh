@@ -41,11 +41,31 @@ fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
+fetch_or_copy local/share/archne/model-usage-remaining.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
 if [[ -f "$OPENCODE_CFG" ]]; then
   jq '.plugin = ((.plugin // []) + ["opencode-synced"] | unique)' "$OPENCODE_CFG" > "$OPENCODE_CFG.tmp" && mv "$OPENCODE_CFG.tmp" "$OPENCODE_CFG"
 fi
+
+echo "Showing remaining weekly model usage…"
+MODEL_USAGE_PLUGIN="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.model-usage"
+MODEL_USAGE_PATCH="$HOME/.local/share/archne/model-usage-remaining.patch"
+
+if [[ ! -d "$MODEL_USAGE_PLUGIN" ]]; then
+  omarchy plugin clone omarchy.model-usage
+fi
+
+if git -C "$MODEL_USAGE_PLUGIN" apply --reverse --check "$MODEL_USAGE_PATCH" &>/dev/null; then
+  :
+elif git -C "$MODEL_USAGE_PLUGIN" apply --check "$MODEL_USAGE_PATCH"; then
+  git -C "$MODEL_USAGE_PLUGIN" apply "$MODEL_USAGE_PATCH"
+else
+  echo "Unable to customize the current Omarchy model-usage plugin." >&2
+  exit 1
+fi
+
+omarchy-shell shell rescanPlugins
 
 echo
 echo "Copying web applications…"

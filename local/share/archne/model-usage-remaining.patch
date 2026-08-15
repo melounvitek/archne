@@ -1,0 +1,35 @@
+--- a/Panel.qml
++++ b/Panel.qml
+@@ -37,9 +37,20 @@
+   property double nowMs: Date.now()
+ 
+   readonly property var limits: limitWindows(provider)
++  readonly property var weeklyLimit: {
++    for (var i = 0; i < limits.length; i++)
++      if (limits[i].title === "Weekly") return limits[i]
++    return null
++  }
++  readonly property int weeklyRemainingPercent: weeklyLimit
++    ? Math.round((1 - root.clamp(weeklyLimit.percent, 0, 1)) * 100)
++    : -1
+   readonly property var models: modelRows(provider)
+   readonly property var headline: bindingWindow(provider)
+   readonly property bool alarming: !!headline && headline.percent >= 0.9
++  readonly property real openPanelIndicatorWidth: weeklyRemainingPercent >= 0 && !button.vertical
++    ? button.glyphPaintedWidth
++    : 0
+ 
+   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
+   function alpha(c, a) { return Qt.rgba(c.r, c.g, c.b, a) }
+@@ -292,7 +303,10 @@
+     id: button
+     anchors.fill: parent
+     bar: root.bar
+-    text: "󱚣"
++    text: root.weeklyRemainingPercent >= 0 && !vertical
++      ? "󱚣 " + root.weeklyRemainingPercent + "%"
++      : "󱚣"
++    slotSize: Style.bar.iconSlot * (root.weeklyRemainingPercent >= 0 && !vertical ? 2 : 1)
+     active: root.alarming
+     onPressed: function(buttonCode) {
+       if (buttonCode === Qt.RightButton) root.refreshNow()
