@@ -119,7 +119,7 @@ fi
             panel_contents = customized_panel.read_text()
             self.assertEqual(panel_contents.count("readonly property int weeklyRemainingPercent"), 1)
             self.assertIn("Math.round((1 - root.clamp(weeklyLimit.percent, 0, 1)) * 100)", panel_contents)
-            self.assertIn('"󱚣 " + root.weeklyRemainingPercent + "%"', panel_contents)
+            self.assertIn('root.weeklyRemainingPercent + "% 󱚣"', panel_contents)
 
 
 if __name__ == "__main__":

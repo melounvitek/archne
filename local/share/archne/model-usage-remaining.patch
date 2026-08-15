@@ -27,7 +27,7 @@
      bar: root.bar
 -    text: "󱚣"
 +    text: root.weeklyRemainingPercent >= 0 && !vertical
-+      ? "󱚣 " + root.weeklyRemainingPercent + "%"
++      ? root.weeklyRemainingPercent + "% 󱚣"
 +      : "󱚣"
 +    slotSize: Style.bar.iconSlot * (root.weeklyRemainingPercent >= 0 && !vertical ? 2 : 1)
      active: root.alarming
