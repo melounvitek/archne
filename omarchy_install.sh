@@ -65,7 +65,7 @@ else
   exit 1
 fi
 
-omarchy-shell shell rescanPlugins
+omarchy restart shell
 
 echo
 echo "Copying web applications…"

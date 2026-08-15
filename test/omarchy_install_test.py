@@ -50,7 +50,7 @@ Panel {
 """
             )
 
-            for command in ("chsh", "omarchy-shell", "pacman", "sudo", "systemctl", "yay"):
+            for command in ("chsh", "pacman", "sudo", "systemctl", "yay"):
                 stub = bin_dir / command
                 stub.write_text('#!/usr/bin/env bash\nprintf "%s %s\\n" "$(basename "$0")" "$*" >> "$TEST_LOG"\n')
                 stub.chmod(0o755)
@@ -113,6 +113,7 @@ fi
             self.assertIn("omarchy restart hyprsunset", commands)
             self.assertIn("omarchy install chromium google account", commands)
             self.assertEqual(commands.count("omarchy plugin clone omarchy.model-usage"), 1)
+            self.assertIn("omarchy restart shell", commands)
 
             customized_panel = home / ".config/omarchy/plugins/archne-test.model-usage/Panel.qml"
             panel_contents = customized_panel.read_text()
