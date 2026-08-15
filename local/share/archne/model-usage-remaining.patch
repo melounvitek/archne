@@ -2,7 +2,7 @@
 +++ b/Panel.qml
 @@ -37,9 +37,20 @@
    property double nowMs: Date.now()
- 
+
    readonly property var limits: limitWindows(provider)
 +  readonly property var weeklyLimit: {
 +    for (var i = 0; i < limits.length; i++)
@@ -18,7 +18,7 @@
 +  readonly property real openPanelIndicatorWidth: weeklyRemainingPercent >= 0 && !button.vertical
 +    ? button.glyphPaintedWidth
 +    : 0
- 
+
    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
    function alpha(c, a) { return Qt.rgba(c.r, c.g, c.b, a) }
 @@ -292,7 +303,10 @@
