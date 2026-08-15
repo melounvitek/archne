@@ -107,7 +107,9 @@ fi
 
             self.assertTrue((home / ".config/hypr/archne.lua").is_file())
             self.assertTrue((home / ".config/hypr/local_overrides.lua").is_file())
-            self.assertTrue((home / ".config/nvim/lua/plugins/ruby.lua").is_file())
+
+            ruby_config = home / ".config/nvim/lua/plugins/ruby.lua"
+            self.assertEqual(ruby_config.read_text(), (ROOT / "config/nvim/lua/plugins/ruby.lua").read_text())
             self.assertEqual(hyprland_config.count('require("hypr.archne")'), 1)
             self.assertIn("Existing local_overrides.conf must be converted to Lua", outputs[0])
             self.assertIn("For Ruby LSP support, install Solargraph for each Ruby version you use:", outputs[0])
