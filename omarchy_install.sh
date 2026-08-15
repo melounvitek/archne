@@ -41,6 +41,7 @@ fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
+fetch_or_copy config/nvim/lua/plugins/ruby.lua
 fetch_or_copy local/share/archne/model-usage-remaining.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
@@ -142,4 +143,8 @@ echo
 
 echo "Enabling Google Account in Chromium…"
 omarchy install chromium google account
+echo
+
+echo "For Ruby LSP support, install Solargraph for each Ruby version you use:"
+echo "  mise x ruby@<version> -- gem install solargraph --no-document"
 echo
