@@ -9,7 +9,7 @@ ROOT = Path(__file__).parents[1]
 
 
 class OmarchyInstallTest(unittest.TestCase):
-    def test_installs_quattro_hyprland_config_with_current_commands(self):
+    def test_installs_omarchy_overlay_idempotently(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory) / "home"
             bin_dir = Path(directory) / "bin"
