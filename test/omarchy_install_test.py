@@ -125,7 +125,6 @@ fi
             self.assertIn("For Ruby LSP support, install Solargraph for each Ruby version you use:", outputs[0])
             self.assertIn("mise x ruby@<version> -- gem install solargraph --no-document", outputs[0])
             self.assertIn("omarchy mise install npm:@earendil-works/pi-coding-agent pi", commands)
-            self.assertIn("omarchy restart hyprsunset", commands)
             self.assertIn("omarchy install chromium google account", commands)
             self.assertEqual(commands.count("omarchy plugin clone omarchy.agents"), 1)
             self.assertIn("omarchy restart shell", commands)

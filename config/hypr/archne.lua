@@ -44,6 +44,4 @@ for _, direction in ipairs({
   o.bind(keys, direction.description, "~/.config/hypr/scripts/group-aware-focus " .. direction.argument)
 end
 
-o.launch_on_start("hyprsunset")
-
 require("hypr.local_overrides")

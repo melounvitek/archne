@@ -8,7 +8,6 @@ local config = archne.configs[1]
 helper.assert_equal(config.general.no_focus_fallback, true, "focus fallback")
 helper.assert_equal(config.input.touchpad.natural_scroll, true, "natural scrolling")
 helper.assert_equal(config.input.kb_layout, nil, "keyboard layout")
-helper.assert_equal(archne.starts[1], "hyprsunset", "nightlight autostart")
 helper.assert_equal(archne.local_override_loaded, true, "local overrides")
 
 for _, keys in ipairs({

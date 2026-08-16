@@ -36,7 +36,6 @@ if [[ -s "$LEGACY_LOCAL_OVERRIDES" && ! -s "$LOCAL_OVERRIDES" ]]; then
 fi
 touch "$LOCAL_OVERRIDES"
 fetch_or_copy config/hypr/archne.lua
-fetch_or_copy config/hypr/hyprsunset.conf
 fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
@@ -102,9 +101,6 @@ LINE='require("hypr.archne")'
 if ! grep -Fxq "$LINE" "$HYPR_CFG" 2>/dev/null; then
   echo "$LINE" >> "$HYPR_CFG"
 fi
-
-echo "Enabling automatic nightlight…"
-omarchy restart hyprsunset
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo
