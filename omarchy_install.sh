@@ -43,6 +43,7 @@ chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scri
 fetch_or_copy config/nvim/lua/config/options.lua
 fetch_or_copy config/nvim/lua/plugins/ruby.lua
 fetch_or_copy local/share/archne/model-usage-remaining.patch
+fetch_or_copy local/share/archne/model-usage-launch-agent.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
 if [[ -f "$OPENCODE_CFG" ]]; then
@@ -51,21 +52,27 @@ fi
 
 echo "Showing remaining weekly model usage…"
 MODEL_USAGE_PLUGIN="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.model-usage"
-MODEL_USAGE_PATCH="$HOME/.local/share/archne/model-usage-remaining.patch"
+MODEL_USAGE_PATCHES=(
+  "$HOME/.local/share/archne/model-usage-remaining.patch"
+  "$HOME/.local/share/archne/model-usage-launch-agent.patch"
+)
 
 if [[ ! -d "$MODEL_USAGE_PLUGIN" ]]; then
   omarchy plugin clone omarchy.model-usage
 fi
 
-if git -C "$MODEL_USAGE_PLUGIN" apply --reverse --check "$MODEL_USAGE_PATCH" &>/dev/null; then
-  :
-elif git -C "$MODEL_USAGE_PLUGIN" apply --check "$MODEL_USAGE_PATCH"; then
-  git -C "$MODEL_USAGE_PLUGIN" apply "$MODEL_USAGE_PATCH"
-else
-  echo "Unable to customize the current Omarchy model-usage plugin." >&2
-  exit 1
-fi
+for patch in "${MODEL_USAGE_PATCHES[@]}"; do
+  if git -C "$MODEL_USAGE_PLUGIN" apply --reverse --check "$patch" &>/dev/null; then
+    :
+  elif git -C "$MODEL_USAGE_PLUGIN" apply --check "$patch"; then
+    git -C "$MODEL_USAGE_PLUGIN" apply "$patch"
+  else
+    echo "Unable to customize the current Omarchy model-usage plugin." >&2
+    exit 1
+  fi
+done
 
+omarchy bar set "$(basename "$MODEL_USAGE_PLUGIN")" refreshIntervalSec 300 --json
 omarchy restart shell
 
 echo
