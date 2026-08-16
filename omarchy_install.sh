@@ -125,8 +125,15 @@ echo "Ensuring Mise is activated in $ZSHRC…"
 grep -qxF 'eval "$(mise activate zsh)"' "$ZSHRC" || echo 'eval "$(mise activate zsh)"' >>"$ZSHRC"
 echo
 
-echo "Changing default shell to zsh…"
-$SUDO chsh -s "$(command -v zsh)" $(whoami)
+zsh_path="$(command -v zsh)"
+current_shell="$(getent passwd "$(whoami)" | cut -d: -f7)"
+
+if [[ "$current_shell" == "$zsh_path" ]]; then
+  echo "Default shell is already zsh."
+else
+  echo "Changing default shell to zsh…"
+  $SUDO chsh -s "$zsh_path" "$(whoami)"
+fi
 echo
 
 echo "Adding some Git configuration…"
