@@ -1,6 +1,6 @@
 --- a/Panel.qml
 +++ b/Panel.qml
-@@ -37,9 +37,20 @@
+@@ -37,6 +37,14 @@
    property double nowMs: Date.now()
 
    readonly property var limits: limitWindows(provider)
@@ -14,14 +14,8 @@
 +    : -1
    readonly property var models: modelRows(provider)
    readonly property var headline: bindingWindow(provider)
-   readonly property bool alarming: !!headline && headline.percent >= 0.9
-+  readonly property real openPanelIndicatorWidth: weeklyRemainingPercent >= 0 && !button.vertical
-+    ? button.glyphPaintedWidth
-+    : 0
-
-   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
-   function alpha(c, a) { return Qt.rgba(c.r, c.g, c.b, a) }
-@@ -292,7 +303,10 @@
+   readonly property var balance: provider ? (provider.balance || null) : null
+@@ -339,7 +347,10 @@
      id: button
      anchors.fill: parent
      bar: root.bar
@@ -32,4 +26,4 @@
 +    slotSize: Style.bar.iconSlot * (root.weeklyRemainingPercent >= 0 && !vertical ? 2 : 1)
      active: root.alarming
      onPressed: function(buttonCode) {
-       if (buttonCode === Qt.RightButton) root.refreshNow()
+       if (buttonCode === Qt.RightButton) root.launchAgent()

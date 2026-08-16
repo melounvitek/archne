@@ -21,8 +21,8 @@ class OmarchyInstallTest(unittest.TestCase):
             (home / ".zshrc").write_text("")
             bin_dir.mkdir()
 
-            model_usage_panel = Path(directory) / "Panel.qml"
-            model_usage_panel.write_text(
+            agents_panel = Path(directory) / "Panel.qml"
+            agents_panel.write_text(
                 """import QtQuick
 
 Panel {
@@ -31,10 +31,18 @@ Panel {
   readonly property var limits: limitWindows(provider)
   readonly property var models: modelRows(provider)
   readonly property var headline: bindingWindow(provider)
-  readonly property bool alarming: !!headline && headline.percent >= 0.9
+  readonly property var balance: provider ? (provider.balance || null) : null
+  readonly property bool balanceAlarming: !!balance && balance.funded > 0
+    && balance.remaining / balance.funded <= 0.1
+  readonly property bool alarming: (!!headline && headline.percent >= 0.9) || balanceAlarming
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
   function alpha(c, a) { return Qt.rgba(c.r, c.g, c.b, a) }
+
+  function launchAgent() {
+    if (root.bar) root.bar.run("omarchy-agent --pick")
+    root.close()
+  }
 
   BarIconButton {
     id: button
@@ -43,7 +51,9 @@ Panel {
     text: "󱚣"
     active: root.alarming
     onPressed: function(buttonCode) {
-      if (buttonCode === Qt.RightButton) root.refreshNow()
+      if (buttonCode === Qt.RightButton) root.launchAgent()
+      else if (buttonCode === Qt.MiddleButton) root.selectProvider(root.providerIndex + 1)
+      else root.toggle()
     }
   }
 }
@@ -71,9 +81,9 @@ printf "%s %s\\n" "$(basename "$0")" "$*" >> "$TEST_LOG"
                 """#!/usr/bin/env bash
 printf "%s %s\\n" "$(basename "$0")" "$*" >> "$TEST_LOG"
 if [[ $1 == "plugin" && $2 == "clone" ]]; then
-  target="$HOME/.config/omarchy/plugins/$USER.model-usage"
+  target="$HOME/.config/omarchy/plugins/$USER.agents"
   mkdir -p "$target"
-  cp "$TEST_MODEL_USAGE_PANEL" "$target/Panel.qml"
+  cp "$TEST_AGENTS_PANEL" "$target/Panel.qml"
 fi
 """
             )
@@ -85,7 +95,7 @@ fi
                     "HOME": str(home),
                     "PATH": f"{bin_dir}:/usr/bin",
                     "TEST_LOG": str(log),
-                    "TEST_MODEL_USAGE_PANEL": str(model_usage_panel),
+                    "TEST_AGENTS_PANEL": str(agents_panel),
                     "USER": "archne-test",
                 }
             )
@@ -117,14 +127,15 @@ fi
             self.assertIn("omarchy mise install npm:@earendil-works/pi-coding-agent pi", commands)
             self.assertIn("omarchy restart hyprsunset", commands)
             self.assertIn("omarchy install chromium google account", commands)
-            self.assertEqual(commands.count("omarchy plugin clone omarchy.model-usage"), 1)
+            self.assertEqual(commands.count("omarchy plugin clone omarchy.agents"), 1)
             self.assertIn("omarchy restart shell", commands)
 
-            customized_panel = home / ".config/omarchy/plugins/archne-test.model-usage/Panel.qml"
+            customized_panel = home / ".config/omarchy/plugins/archne-test.agents/Panel.qml"
             panel_contents = customized_panel.read_text()
             self.assertEqual(panel_contents.count("readonly property int weeklyRemainingPercent"), 1)
             self.assertIn("Math.round((1 - root.clamp(weeklyLimit.percent, 0, 1)) * 100)", panel_contents)
             self.assertIn('root.weeklyRemainingPercent + "% 󱚣"', panel_contents)
+            self.assertEqual(panel_contents.count("root.launchAgent()"), 1)
 
 
 if __name__ == "__main__":

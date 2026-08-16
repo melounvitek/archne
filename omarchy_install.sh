@@ -42,8 +42,7 @@ fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
 fetch_or_copy config/nvim/lua/plugins/ruby.lua
-fetch_or_copy local/share/archne/model-usage-remaining.patch
-fetch_or_copy local/share/archne/model-usage-launch-agent.patch
+fetch_or_copy local/share/archne/agents-remaining.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
 if [[ -f "$OPENCODE_CFG" ]]; then
@@ -51,28 +50,23 @@ if [[ -f "$OPENCODE_CFG" ]]; then
 fi
 
 echo "Showing remaining weekly model usage…"
-MODEL_USAGE_PLUGIN="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.model-usage"
-MODEL_USAGE_PATCHES=(
-  "$HOME/.local/share/archne/model-usage-remaining.patch"
-  "$HOME/.local/share/archne/model-usage-launch-agent.patch"
-)
+AGENTS_PLUGIN="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.agents"
+AGENTS_PATCH="$HOME/.local/share/archne/agents-remaining.patch"
 
-if [[ ! -d "$MODEL_USAGE_PLUGIN" ]]; then
-  omarchy plugin clone omarchy.model-usage
+if [[ ! -d "$AGENTS_PLUGIN" ]]; then
+  omarchy plugin clone omarchy.agents
 fi
 
-for patch in "${MODEL_USAGE_PATCHES[@]}"; do
-  if git -C "$MODEL_USAGE_PLUGIN" apply --reverse --check "$patch" &>/dev/null; then
-    :
-  elif git -C "$MODEL_USAGE_PLUGIN" apply --check "$patch"; then
-    git -C "$MODEL_USAGE_PLUGIN" apply "$patch"
-  else
-    echo "Unable to customize the current Omarchy model-usage plugin." >&2
-    exit 1
-  fi
-done
+if git -C "$AGENTS_PLUGIN" apply --reverse --check "$AGENTS_PATCH" &>/dev/null; then
+  :
+elif git -C "$AGENTS_PLUGIN" apply --check "$AGENTS_PATCH"; then
+  git -C "$AGENTS_PLUGIN" apply "$AGENTS_PATCH"
+else
+  echo "Unable to customize the current Omarchy agents plugin." >&2
+  exit 1
+fi
 
-omarchy bar set "$(basename "$MODEL_USAGE_PLUGIN")" refreshIntervalSec 300 --json
+omarchy bar set "$(basename "$AGENTS_PLUGIN")" refreshIntervalSec 300 --json
 omarchy restart shell
 
 echo
