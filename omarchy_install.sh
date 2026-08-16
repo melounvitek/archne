@@ -7,7 +7,7 @@ GITHUB_REPO="https://raw.githubusercontent.com/melounvitek/archne/main/"
 
 echo
 echo "Updating & installing core packages…"
-$SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide bitwarden rsync
+$SUDO pacman -Syu --needed --noconfirm less vim zsh syncthing htop tree transmission-gtk zoxide rsync
 yay -S --needed --noconfirm ookla-speedtest-bin
 
 if ! command -v pi &>/dev/null; then
