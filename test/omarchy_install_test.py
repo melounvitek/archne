@@ -120,6 +120,9 @@ fi
 
             ruby_config = home / ".config/nvim/lua/plugins/ruby.lua"
             self.assertEqual(ruby_config.read_text(), (ROOT / "config/nvim/lua/plugins/ruby.lua").read_text())
+
+            solargraph_patch = home / ".config/nvim/solargraph_mapping_patch.rb"
+            self.assertEqual(solargraph_patch.read_text(), (ROOT / "config/nvim/solargraph_mapping_patch.rb").read_text())
             self.assertEqual(hyprland_config.count('require("hypr.archne")'), 1)
             self.assertIn("Existing local_overrides.conf must be converted to Lua", outputs[0])
             self.assertIn("For Ruby LSP support, install Solargraph for each Ruby version you use:", outputs[0])

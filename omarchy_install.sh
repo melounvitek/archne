@@ -44,6 +44,7 @@ fetch_or_copy config/hypr/scripts/toggle-workspace-group
 chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scripts/toggle-workspace-group"
 fetch_or_copy config/nvim/lua/config/options.lua
 fetch_or_copy config/nvim/lua/plugins/ruby.lua
+fetch_or_copy config/nvim/solargraph_mapping_patch.rb
 fetch_or_copy local/share/archne/agents-remaining.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
