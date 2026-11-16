@@ -10,13 +10,7 @@ echo "Updating Omarchy…"
 omarchy update -y
 
 echo "Installing core packages…"
-omarchy pkg add less vim zsh syncthing htop tree transmission-gtk zoxide rsync
-yay -S --needed --noconfirm ookla-speedtest-bin
-
-if ! command -v pi &>/dev/null; then
-  echo "Installing Pi…"
-  omarchy mise install npm:@earendil-works/pi-coding-agent pi
-fi
+omarchy pkg add vim zsh syncthing htop tree transmission-gtk rsync
 
 fetch_or_copy() {
   src_file=$1
@@ -32,12 +26,7 @@ fetch_or_copy() {
 
 echo
 echo "Copying configs…"
-LEGACY_LOCAL_OVERRIDES="$HOME/.config/hypr/local_overrides.conf"
-LOCAL_OVERRIDES="$HOME/.config/hypr/local_overrides.lua"
-if [[ -s "$LEGACY_LOCAL_OVERRIDES" && ! -s "$LOCAL_OVERRIDES" ]]; then
-  echo "Existing local_overrides.conf must be converted to Lua: $LOCAL_OVERRIDES"
-fi
-touch "$LOCAL_OVERRIDES"
+touch "$HOME/.config/hypr/local_overrides.lua"
 fetch_or_copy config/hypr/archne.lua
 fetch_or_copy config/hypr/scripts/group-aware-focus
 fetch_or_copy config/hypr/scripts/toggle-workspace-group
@@ -137,7 +126,6 @@ fi
 echo
 
 echo "Adding some Git configuration…"
-git config --global --replace-all core.pager "less"
 git config --global core.editor "nvim"
 echo
 
