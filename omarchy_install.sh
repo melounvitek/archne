@@ -40,12 +40,38 @@ if [[ -f "$OPENCODE_CFG" ]]; then
   jq '.plugin = ((.plugin // []) + ["opencode-synced"] | unique)' "$OPENCODE_CFG" > "$OPENCODE_CFG.tmp" && mv "$OPENCODE_CFG.tmp" "$OPENCODE_CFG"
 fi
 
+echo "Installing shell plugins…"
+PLUGINS_DIR="$HOME/.config/omarchy/plugins"
+
 # Replace the old patched clone of the agents widget with the stock one
-AGENTS_CLONE="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.agents"
+AGENTS_CLONE="$PLUGINS_DIR/${USER:-$(id -un)}.agents"
 if [[ -d "$AGENTS_CLONE" ]]; then
-  echo "Using stock agents widget…"
   omarchy plugin remove "$(basename "$AGENTS_CLONE")" --yes
 fi
+
+# add_plugin <id> <git-url> [--enable [bar placement…]]
+add_plugin() {
+  local id=$1 url=$2
+  shift 2
+  if [[ -d "$PLUGINS_DIR/$id" ]]; then
+    echo " → $id (already installed)"
+    return
+  fi
+  if [[ ${1:-} == --enable ]]; then
+    shift
+    omarchy plugin add "$url" --enable --yes
+    if (($# > 0)); then
+      omarchy bar move "$id" "$@"
+    fi
+  else
+    omarchy plugin add "$url" --yes
+  fi
+  echo " → $id"
+}
+
+add_plugin skoom.beszel https://github.com/skoom21/omarchy-beszel.git --enable --after omarchy.system-update
+add_plugin spencerbull.cliproxyapi https://github.com/spencerbull/omarchy-cliproxyapi --enable --before omarchy.agents
+add_plugin sunshine144.solar-nightlight https://github.com/sunshine144/solar-nightlight --enable
 
 echo
 echo "Copying web applications…"
@@ -125,6 +151,11 @@ echo
 
 echo "Enabling Google Account in Chromium…"
 omarchy install chromium google account
+echo
+
+echo "To finish shell plugin setup:"
+echo "  Beszel:      ~/.config/omarchy/plugins/skoom.beszel/setup"
+echo "  CLIProxyAPI: click its bar icon and enter the server URL and management key"
 echo
 
 echo "For Ruby LSP support, install Solargraph for each Ruby version you use:"
