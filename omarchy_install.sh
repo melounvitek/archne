@@ -34,32 +34,18 @@ chmod +x "$HOME/.config/hypr/scripts/group-aware-focus" "$HOME/.config/hypr/scri
 fetch_or_copy config/nvim/lua/config/options.lua
 fetch_or_copy config/nvim/lua/plugins/ruby.lua
 fetch_or_copy config/nvim/solargraph_mapping_patch.rb
-fetch_or_copy local/share/archne/agents-remaining.patch
 echo "Ensuring opencode-synced plugin…"
 OPENCODE_CFG="$HOME/.config/opencode/opencode.json"
 if [[ -f "$OPENCODE_CFG" ]]; then
   jq '.plugin = ((.plugin // []) + ["opencode-synced"] | unique)' "$OPENCODE_CFG" > "$OPENCODE_CFG.tmp" && mv "$OPENCODE_CFG.tmp" "$OPENCODE_CFG"
 fi
 
-echo "Showing remaining weekly model usage…"
-AGENTS_PLUGIN="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.agents"
-AGENTS_PATCH="$HOME/.local/share/archne/agents-remaining.patch"
-
-if [[ ! -d "$AGENTS_PLUGIN" ]]; then
-  omarchy plugin clone omarchy.agents
+# Replace the old patched clone of the agents widget with the stock one
+AGENTS_CLONE="$HOME/.config/omarchy/plugins/${USER:-$(id -un)}.agents"
+if [[ -d "$AGENTS_CLONE" ]]; then
+  echo "Using stock agents widget…"
+  omarchy plugin remove "$(basename "$AGENTS_CLONE")" --yes
 fi
-
-if git -C "$AGENTS_PLUGIN" apply --reverse --check "$AGENTS_PATCH" &>/dev/null; then
-  :
-elif git -C "$AGENTS_PLUGIN" apply --check "$AGENTS_PATCH"; then
-  git -C "$AGENTS_PLUGIN" apply "$AGENTS_PATCH"
-else
-  echo "Unable to customize the current Omarchy agents plugin." >&2
-  exit 1
-fi
-
-omarchy bar set "$(basename "$AGENTS_PLUGIN")" refreshIntervalSec 300 --json
-omarchy restart shell
 
 echo
 echo "Copying web applications…"
