@@ -73,6 +73,9 @@ add_plugin skoom.beszel https://github.com/skoom21/omarchy-beszel.git --enable -
 add_plugin spencerbull.cliproxyapi https://github.com/spencerbull/omarchy-cliproxyapi --enable --before omarchy.agents
 add_plugin sunshine144.solar-nightlight https://github.com/sunshine144/solar-nightlight --enable
 
+# Show real server names in the Beszel panel instead of "Server N"
+omarchy bar set skoom.beszel maskSensitive Off
+
 echo
 echo "Copying web applications…"
 mkdir -p $HOME/.local/share/applications/icons/
